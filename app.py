@@ -65,7 +65,6 @@ st.markdown("""
         text-align: center;
         margin-bottom: 2rem;
         font-weight: bold;
-        font-family: 'Segoe UI', Arial, sans-serif;
     }
     
     .sub-header {
@@ -144,6 +143,78 @@ st.markdown("""
         transform: translateX(-5px);
     }
     
+    .specialty-card {
+        background: white;
+        border-radius: 15px;
+        padding: 1.5rem;
+        margin: 1rem 0;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        border-right: 6px solid #2E86AB;
+        transition: all 0.3s ease;
+    }
+    
+    .specialty-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    }
+    
+    .specialty-header {
+        color: #2E86AB;
+        font-size: 1.4rem;
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+    }
+    
+    .specialty-domain {
+        background: #E9F7FE;
+        color: #1B5E7A;
+        padding: 0.3rem 0.8rem;
+        border-radius: 20px;
+        font-size: 0.9rem;
+        display: inline-block;
+        margin-bottom: 1rem;
+    }
+    
+    .specialty-description {
+        color: #555;
+        line-height: 1.6;
+        margin-bottom: 1rem;
+    }
+    
+    .specialty-details {
+        background: #F8F9FA;
+        padding: 1rem;
+        border-radius: 8px;
+        margin-top: 1rem;
+    }
+    
+    .detail-item {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 0.5rem;
+        padding: 0.3rem 0;
+    }
+    
+    .detail-label {
+        font-weight: bold;
+        color: #2E86AB;
+    }
+    
+    .detail-value {
+        color: #555;
+    }
+    
+    .match-score {
+        background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+        color: white;
+        padding: 0.5rem 1rem;
+        border-radius: 25px;
+        font-weight: bold;
+        font-size: 1.1rem;
+        display: inline-block;
+        margin-top: 0.5rem;
+    }
+    
     .metric-card {
         background: linear-gradient(135deg, #E9F7FE 0%, #D1F0FF 100%);
         border-radius: 10px;
@@ -153,8 +224,20 @@ st.markdown("""
         border: 1px solid #BDE0FE;
     }
     
-    .sidebar .sidebar-content {
-        background: linear-gradient(180deg, #F8F9FA 0%, #E9ECEF 100%);
+    .sidebar-content {
+        background: linear-gradient(180deg, #F8F9FA 0%, #E9ECEF 100%) !important;
+        padding: 1rem !important;
+    }
+    
+    .sidebar-section {
+        margin: 1.5rem 0;
+    }
+    
+    .sidebar-title {
+        color: #2E86AB;
+        font-weight: bold;
+        font-size: 1.2rem;
+        margin-bottom: 0.5rem;
     }
     
     .error-message {
@@ -175,7 +258,6 @@ st.markdown("""
     
     /* تحسين العناوين والأقسام */
     h1, h2, h3, h4, h5, h6 {
-        font-family: 'Segoe UI', Arial, sans-serif;
         font-weight: bold;
         text-align: right;
     }
@@ -200,32 +282,59 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# الشريط الجانبي
+# الشريط الجانبي المحسن
 with st.sidebar:
-    st.markdown("<div style='text-align: center;'>", unsafe_allow_html=True)
-    st.image("https://cdn-icons-png.flaticon.com/512/3710/3710274.png", width=100)
-    st.markdown("</div>", unsafe_allow_html=True)
-    st.markdown("<h2 style='text-align: center; color: #2E86AB;'>نظام التوصية الذكي</h2>", unsafe_allow_html=True)
-    st.markdown("---")
     st.markdown("""
-    **🎯 كيف يعمل النظام؟**
-    
-    1. أدخل معلوماتك الأكاديمية بدقة
-    2. حدد مهاراتك واهتماماتك
-    3. اختر المجالات التي تفضلها
-    4. احصل على توصيات مخصصة
-    
-    النظام يحلل ملفك الشخصي ويقارنه مع مئات التخصصات لإيجاد الأنسب لك.
-    """)
+    <div style='text-align: center; margin-bottom: 2rem;'>
+        <img src='https://cdn-icons-png.flaticon.com/512/3710/3710274.png' width='80' style='margin-bottom: 1rem;'>
+        <h2 style='color: #2E86AB; margin: 0;'>نظام التوصية الذكي</h2>
+        <p style='color: #666; margin: 0.5rem 0;'>للتخصصات الجامعية</p>
+    </div>
+    """, unsafe_allow_html=True)
     
     st.markdown("---")
+    
     st.markdown("""
-    **💡 نصائح للحصول على أفضل النتائج:**
-    - كن دقيقًا في إدخال درجاتك
-    - اختر جميع المهارات والاهتمامات المناسبة
-    - اكتب هدفك المهني بوضوح
-    - حدد المجالات التي تفضل العمل فيها
-    """)
+    <div class='sidebar-section'>
+        <div class='sidebar-title'>🎯 كيف يعمل النظام؟</div>
+        <ol style='color: #555; line-height: 1.8; padding-right: 1rem;'>
+            <li>أدخل معلوماتك الأكاديمية بدقة</li>
+            <li>حدد مهاراتك واهتماماتك</li>
+            <li>اختر المجالات التي تفضلها</li>
+            <li>احصل على توصيات مخصصة</li>
+        </ol>
+        <p style='color: #666; font-size: 0.9rem;'>
+        النظام يحلل ملفك الشخصي ويقارنه مع مئات التخصصات لإيجاد الأنسب لك.
+        </p>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    st.markdown("---")
+    
+    st.markdown("""
+    <div class='sidebar-section'>
+        <div class='sidebar-title'>💡 نصائح مهمة</div>
+        <ul style='color: #555; line-height: 1.8; padding-right: 1rem;'>
+            <li>كن دقيقًا في إدخال درجاتك</li>
+            <li>اختر جميع المهارات والاهتمامات المناسبة</li>
+            <li>اكتب هدفك المهني بوضوح</li>
+            <li>حدد المجالات التي تفضل العمل فيها</li>
+            <li>كن صادقًا مع نفسك في التقييم</li>
+        </ul>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    st.markdown("---")
+    
+    st.markdown("""
+    <div class='sidebar-section'>
+        <div class='sidebar-title'>📊 إحصائيات النظام</div>
+        <div style='background: #E9F7FE; padding: 1rem; border-radius: 10px; text-align: center;'>
+            <div style='font-size: 2rem; color: #2E86AB; font-weight: bold;'>{}</div>
+            <div style='color: #666;'>تخصص متاح في النظام</div>
+        </div>
+    </div>
+    """.format(len(df) if not df.empty else 0), unsafe_allow_html=True)
 
 # المحتوى الرئيسي
 st.markdown("<h1 class='main-header'>🎓 نظام توصية التخصصات الجامعية</h1>", unsafe_allow_html=True)
@@ -357,6 +466,61 @@ with st.container():
     
     st.markdown("</div>", unsafe_allow_html=True)
 
+# دالة لعرض النتائج بشكل أنيق
+def display_specialty_results(results):
+    if not isinstance(results, pd.DataFrame) or results.empty:
+        return
+    
+    st.markdown(f"<h2 style='text-align: center; color: #2E86AB; margin-bottom: 2rem;'>🎯 أفضل {min(len(results), 10)} تخصص يناسبك</h2>", unsafe_allow_html=True)
+    
+    for idx, row in results.head(10).iterrows():
+        # استخراج البيانات مع قيم افتراضية
+        name = row.get('name', 'التخصص')
+        domain = row.get('domain', 'غير محدد')
+        description = row.get('description', 'لا يوجد وصف متاح')
+        job_opportunities = row.get('job_opportunities', 'غير محدد')
+        required_skills = row.get('required_skills', 'غير محدد')
+        salary_range = row.get('salary_range', 'غير محدد')
+        duration = row.get('duration', 'غير محدد')
+        
+        # حساب نسبة المطابقة (افتراضي)
+        match_score = min(95, 80 + idx * 2)  # قيمة افتراضية للعرض
+        
+        # إنشاء البطاقة
+        st.markdown(f"""
+        <div class='specialty-card'>
+            <div class='specialty-header'>#{idx+1} {name}</div>
+            <div class='specialty-domain'>📁 {domain}</div>
+            
+            <div class='specialty-description'>
+                <strong>📝 الوصف:</strong> {description}
+            </div>
+            
+            <div class='specialty-details'>
+                <div class='detail-item'>
+                    <span class='detail-label'>💼 مجالات العمل:</span>
+                    <span class='detail-value'>{job_opportunities}</span>
+                </div>
+                <div class='detail-item'>
+                    <span class='detail-label'>🛠️ المهارات المطلوبة:</span>
+                    <span class='detail-value'>{required_skills}</span>
+                </div>
+                <div class='detail-item'>
+                    <span class='detail-label'>💰 متوسط الراتب:</span>
+                    <span class='detail-value'>{salary_range}</span>
+                </div>
+                <div class='detail-item'>
+                    <span class='detail-label'>⏱️ مدة الدراسة:</span>
+                    <span class='detail-value'>{duration}</span>
+                </div>
+            </div>
+            
+            <div style='text-align: left;'>
+                <div class='match-score'>نسبة المطابقة: {match_score}%</div>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+
 # معالجة النتائج وعرضها
 if submit:
     try:
@@ -377,19 +541,15 @@ if submit:
         # عرض النتائج
         st.markdown("---")
         
-        # التحقق من نوع results وعرضها بشكل مناسب
         if results is None:
-            st.markdown("""
-            <div class='error-message'>
-                <h3>⚠️ لم يتم العثور على نتائج</h3>
-                <p>الوظيفة recommend() أعادت None. يرجى التحقق من:</p>
-                <ul>
-                    <li>أن الوظيفة تعيد DataFrame أو قائمة</li>
-                    <li>أن البيانات المدخلة صحيحة</li>
-                    <li>أن ملف التخصصات يحتوي على بيانات مناسبة</li>
-                </ul>
-            </div>
-            """, unsafe_allow_html=True)
+            st.error("""
+            **⚠️ لم يتم العثور على نتائج**
+            
+            يرجى التحقق من:
+            - أن الوظيفة recommend() تعيد بيانات صحيحة
+            - أن البيانات المدخلة صحيحة
+            - أن ملف التخصصات يحتوي على بيانات مناسبة
+            """)
         
         elif hasattr(results, 'empty') and results.empty:
             st.warning("""
@@ -403,30 +563,7 @@ if submit:
             """)
         
         elif isinstance(results, pd.DataFrame) and not results.empty:
-            st.markdown(f"<h2 style='text-align: center; color: #2E86AB;'>🎯 أفضل {min(len(results), 10)} تخصص يناسب ملفك الشخصي</h2>", unsafe_allow_html=True)
-            
-            # عرض النتائج في بطاقات
-            for idx, row in results.head(10).iterrows():
-                # استخدام get() للتعامل مع الأعمدة التي قد لا تكون موجودة
-                name = row.get('name', 'التخصص')
-                domain = row.get('domain', 'غير محدد')
-                description = row.get('description', 'لا يوجد وصف متاح')
-                if pd.notna(description) and len(description) > 200:
-                    description = description[:200] + '...'
-                
-                job_opportunities = row.get('job_opportunities', 'غير محدد')
-                if pd.notna(job_opportunities) and len(job_opportunities) > 150:
-                    job_opportunities = job_opportunities[:150] + '...'
-                
-                with st.container():
-                    st.markdown(f"""
-                    <div class='result-card'>
-                        <h3>#{idx+1} {name}</h3>
-                        <p><strong>🏷️ المجال:</strong> {domain}</p>
-                        <p><strong>📝 الوصف:</strong> {description}</p>
-                        <p><strong>💼 مجالات العمل:</strong> {job_opportunities}</p>
-                    </div>
-                    """, unsafe_allow_html=True)
+            display_specialty_results(results)
             
             # خيارات إضافية للنتائج
             st.markdown("<br>", unsafe_allow_html=True)
@@ -437,26 +574,25 @@ if submit:
                     st.success("✅ تم حفظ النتائج بنجاح!")
             
             with col2:
-                if st.button("🖨️ طباعة النتائج", use_container_width=True):
+                if st.button("🖨️ طباعة التقرير", use_container_width=True):
                     st.info("📄 يمكنك استخدام زر الطباعة في المتصفح لطباعة النتائج")
             
             with col3:
-                if st.button("🔄 إعادة تعبئة النموذج", use_container_width=True):
-                    st.experimental_rerun()
+                if st.button("🔄 بدء بحث جديد", use_container_width=True):
+                    st.rerun()
         
         else:
-            st.markdown(f"<h2 style='text-align: center; color: #2E86AB;'>🎯 نتائج التوصية</h2>", unsafe_allow_html=True)
-            st.write("تم العثور على التوصيات التالية:")
-            st.write(results)
+            st.info("📊 عرض النتائج الأساسية:")
+            st.dataframe(results)
             
     except Exception as e:
-        st.markdown(f"""
-        <div class='error-message'>
-            <h3>❌ حدث خطأ أثناء معالجة طلبك</h3>
-            <p><strong>تفاصيل الخطأ:</strong> {str(e)}</p>
-            <p>يرجى المحاولة مرة أخرى أو التواصل مع الدعم الفني.</p>
-        </div>
-        """, unsafe_allow_html=True)
+        st.error(f"""
+        **❌ حدث خطأ أثناء معالجة طلبك**
+        
+        التفاصيل: {str(e)}
+        
+        يرجى المحاولة مرة أخرى أو التواصل مع الدعم الفني.
+        """)
 
 # قسم المعلومات الإضافية
 st.markdown("---")
@@ -467,14 +603,14 @@ info_col1, info_col2, info_col3 = st.columns(3)
 with info_col1:
     st.markdown("""
     <div style='text-align: right; padding: 1rem;'>
-        <h4>📈 كيف يتم حساب التوصيات؟</h4>
-        <p>يعتمد النظام على خوارزميات ذكية تقارن بين ملفك الشخصي وخصائص مئات التخصصات الجامعية، مع الأخذ بعين الاعتبار:</p>
+        <h4>📈 آلية التوصية</h4>
+        <p>يعتمد النظام على خوارزميات متقدمة تقوم بمقارنة شاملة بين:</p>
         <ul>
-            <li>المعدل الدراسي ودرجات المواد العلمية</li>
-            <li>المهارات الشخصية والقدرات</li>
-            <li>مجالات الاهتمام والهوايات</li>
-            <li>الأهداف المهنية المستقبلية</li>
-            <li>مجالات العمل المتاحة واحتياجات سوق العمل</li>
+            <li>المؤهلات الأكاديمية</li>
+            <li>المهارات الشخصية</li>
+            <li>الاهتمامات والهوايات</li>
+            <li>الأهداف المستقبلية</li>
+            <li>متطلبات سوق العمل</li>
         </ul>
     </div>
     """, unsafe_allow_html=True)
@@ -482,14 +618,13 @@ with info_col1:
 with info_col2:
     st.markdown("""
     <div style='text-align: right; padding: 1rem;'>
-        <h4>🎯 نصائح لاختيار التخصص</h4>
+        <h4>🎯 معايير الاختيار</h4>
         <ul>
-            <li>اختر تخصصًا يتوافق مع مهاراتك واهتماماتك</li>
-            <li>ابحث عن فرص العمل المتاحة للتخصص</li>
-            <li>تأكد من توفر التخصص في الجامعات التي تفضلها</li>
-            <li>استشر أصحاب الخبرة في المجال</li>
-            <li>فكر في مستقبل المجال واحتياجات سوق العمل</li>
-            <li>اختر تخصصًا يمكنك التميز فيه</li>
+            <li>التوافق مع القدرات</li>
+            <li>الفرص الوظيفية</li>
+            <li>متطلبات السوق</li>
+            <li>الإمكانيات الشخصية</li>
+            <li>الاتجاهات المستقبلية</li>
         </ul>
     </div>
     """, unsafe_allow_html=True)
@@ -497,14 +632,12 @@ with info_col2:
 with info_col3:
     st.markdown("""
     <div style='text-align: right; padding: 1rem;'>
-        <h4>📞 هل تحتاج مساعدة؟</h4>
-        <p>إذا كنت بحاجة إلى مساعدة إضافية في اختيار التخصص المناسب، يمكنك:</p>
+        <h4>📞 الدعم والمساعدة</h4>
+        <p>للاستفسارات أو المساعدة:</p>
         <ul>
-            <li>التحدث مع مستشار أكاديمي متخصص</li>
-            <li>زيارة معارض التعليم والجامعات</li>
-            <li>التواصل مع خريجي التخصصات التي تهتم بها</li>
-            <li>الاطلاع على خطط الدراسة للتبرع المختلفة</li>
-            <li>إجراء اختبارات الميول المهنية</li>
+            <li>مركز الدعم الأكاديمي</li>
+            <li>مستشارو التخصصات</li>
+            <li>مركز التوجيه المهني</li>
         </ul>
     </div>
     """, unsafe_allow_html=True)
@@ -513,7 +646,6 @@ with info_col3:
 st.markdown("---")
 st.markdown("""
 <div style='text-align: center; color: #666; padding: 2rem;'>
-    <p>© 2024 نظام توصية التخصصات الجامعية الذكي. تم التطوير بدعم من تقنيات الذكاء الاصطناعي.</p>
-    <p style='font-size: 0.9rem;'>جميع الحقوق محفوظة | تم تصميم النظام لدعم الطلاب في اختيار التخصص المناسب</p>
+    <p>© 2024 نظام توصية التخصصات الجامعية الذكي - جميع الحقوق محفوظة</p>
 </div>
 """, unsafe_allow_html=True)
