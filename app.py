@@ -13,7 +13,11 @@ st.set_page_config(
 # تحميل بيانات التخصصات
 @st.cache_data
 def load_data():
-    return pd.read_csv("majors.csv")
+    try:
+        return pd.read_csv("majors.csv")
+    except FileNotFoundError:
+        st.error("⚠️ ملف majors.csv غير موجود. يرجى التأكد من وجود الملف في المسار الصحيح.")
+        return pd.DataFrame()
 
 df = load_data()
 
@@ -22,13 +26,19 @@ df = load_data()
 def extract_unique_list(cols):
     values = []
     for col in cols:
-        if col in df.columns:
+        if col in df.columns and not df.empty:
             values.extend(df[col].dropna().astype(str).str.split(",").sum())
     return sorted(list(set([v.strip() for v in values if v.strip()])))
 
-skills_options = extract_unique_list(["skills","acquired_skills"])
-interests_options = extract_unique_list(["interests_keywords","core_subjects"])
-preferred_fields_options = extract_unique_list(["domain","name"])
+# الحصول على الخيارات فقط إذا كان DataFrame غير فارغ
+if not df.empty:
+    skills_options = extract_unique_list(["skills","acquired_skills"])
+    interests_options = extract_unique_list(["interests_keywords","core_subjects"])
+    preferred_fields_options = extract_unique_list(["domain","name"])
+else:
+    skills_options = []
+    interests_options = []
+    preferred_fields_options = []
 
 # تخصيص التصميم باستخدام CSS
 st.markdown("""
@@ -88,6 +98,13 @@ st.markdown("""
     .sidebar .sidebar-content {
         background-color: #F8F9FA;
     }
+    .error-message {
+        background-color: #FFE6E6;
+        border: 1px solid #FF0000;
+        border-radius: 5px;
+        padding: 1rem;
+        margin: 1rem 0;
+    }
 </style>
 """, unsafe_allow_html=True)
 
@@ -118,6 +135,18 @@ with st.sidebar:
 # المحتوى الرئيسي
 st.markdown("<h1 class='main-header'>🎓 نظام توصية التخصصات الجامعية</h1>", unsafe_allow_html=True)
 st.markdown("<div style='text-align: center; font-size: 1.2rem; margin-bottom: 2rem;'>الرجاء تعبئة البيانات أدناه للحصول على توصيات مخصصة بناءً على ملفك الشخصي</div>", unsafe_allow_html=True)
+
+# تحقق من وجود البيانات
+if df.empty:
+    st.error("""
+    ⚠️ **لا توجد بيانات للتخصصات متاحة حالياً**
+    
+    يرجى التأكد من:
+    1. وجود ملف majors.csv في المجلد الصحيح
+    2. أن الملف يحتوي على البيانات المطلوبة
+    3. أن الملف بصيغة CSV صحيحة
+    """)
+    st.stop()
 
 # نموذج إدخال البيانات
 with st.container():
@@ -170,54 +199,97 @@ with st.container():
 
 # معالجة النتائج وعرضها
 if submit:
-    with st.spinner("جاري تحليل بياناتك وتوليد التوصيات المناسبة..."):
-        profile = {
-            "about": " ".join(skills + interests + [career_goal] + preferred_fields),
-            "skills": skills,
-            "interests": interests,
-            "career_goal": career_goal,
-            "preferred_fields": preferred_fields,
-            "dislikes": [d.strip() for d in dislikes.split(",") if d.strip()],
-            "gpa": gpa,
-            "grades": {"physics": physics, "chemistry": chemistry, "mathematics": mathematics}
-        }
+    try:
+        with st.spinner("جاري تحليل بياناتك وتوليد التوصيات المناسبة..."):
+            profile = {
+                "about": " ".join(skills + interests + [career_goal] + preferred_fields),
+                "skills": skills,
+                "interests": interests,
+                "career_goal": career_goal,
+                "preferred_fields": preferred_fields,
+                "dislikes": [d.strip() for d in dislikes.split(",") if d.strip()],
+                "gpa": gpa,
+                "grades": {"physics": physics, "chemistry": chemistry, "mathematics": mathematics}
+            }
+            
+            results = recommend(profile)
         
-        results = recommend(profile)
-    
-    # عرض النتائج
-    st.markdown("---")
-    st.markdown(f"<h2 style='text-align: center; color: #2E86AB;'>🎯 أفضل {len(results)} تخصص يناسب ملفك الشخصي</h2>", unsafe_allow_html=True)
-    
-    if not results.empty:
-        # عرض النتائج في بطاقات
-        for idx, row in results.head(10).iterrows():
-            with st.container():
-                st.markdown(f"""
-                <div class='result-card'>
-                    <h3>{idx+1}. {row.get('name', 'التخصص')}</h3>
-                    <p><strong>المجال:</strong> {row.get('domain', 'غير محدد')}</p>
-                    <p><strong>الوصف:</strong> {row.get('description', 'لا يوجد وصف متاح')[:200]}...</p>
-                    <p><strong>مجالات العمل:</strong> {row.get('job_opportunities', 'غير محدد')}</p>
-                </div>
-                """, unsafe_allow_html=True)
+        # عرض النتائج
+        st.markdown("---")
         
-        # خيارات إضافية للنتائج
-        col1, col2, col3 = st.columns(3)
+        # التحقق من نوع results وعرضها بشكل مناسب
+        if results is None:
+            st.markdown("""
+            <div class='error-message'>
+                <h3>⚠️ لم يتم العثور على نتائج</h3>
+                <p>الوظيفة recommend() أعادت None. يرجى التحقق من:</p>
+                <ul>
+                    <li>أن الوظيفة تعيد DataFrame أو قائمة</li>
+                    <li>أن البيانات المدخلة صحيحة</li>
+                    <li>أن ملف التخصصات يحتوي على بيانات مناسبة</li>
+                </ul>
+            </div>
+            """, unsafe_allow_html=True)
         
-        with col1:
-            if st.button("📥 حفظ النتائج", use_container_width=True):
-                # هنا يمكن إضافة وظيفة لحفظ النتائج
-                st.success("تم حفظ النتائج بنجاح!")
+        elif hasattr(results, 'empty') and results.empty:
+            st.warning("""
+            **لم نتمكن من العثور على تخصصات مناسبة**
+            
+            يرجى محاولة:
+            - تعديل معايير البحث
+            - إضافة المزيد من المهارات والاهتمامات
+            - توسيع نطاق المجالات المفضلة
+            """)
         
-        with col2:
-            if st.button("🖨️ طباعة النتائج", use_container_width=True):
-                st.info("يمكنك استخدام زر الطباعة في المتصفح لطباعة النتائج")
+        elif isinstance(results, pd.DataFrame) and not results.empty:
+            st.markdown(f"<h2 style='text-align: center; color: #2E86AB;'>🎯 أفضل {len(results)} تخصص يناسب ملفك الشخصي</h2>", unsafe_allow_html=True)
+            
+            # عرض النتائج في بطاقات
+            for idx, row in results.head(10).iterrows():
+                # استخدام get() للتعامل مع الأعمدة التي قد لا تكون موجودة
+                name = row.get('name', 'التخصص')
+                domain = row.get('domain', 'غير محدد')
+                description = row.get('description', 'لا يوجد وصف متاح')[:200] + '...' if pd.notna(row.get('description')) else 'لا يوجد وصف متاح'
+                job_opportunities = row.get('job_opportunities', 'غير محدد')
+                
+                with st.container():
+                    st.markdown(f"""
+                    <div class='result-card'>
+                        <h3>{idx+1}. {name}</h3>
+                        <p><strong>المجال:</strong> {domain}</p>
+                        <p><strong>الوصف:</strong> {description}</p>
+                        <p><strong>مجالات العمل:</strong> {job_opportunities}</p>
+                    </div>
+                    """, unsafe_allow_html=True)
+            
+            # خيارات إضافية للنتائج
+            col1, col2, col3 = st.columns(3)
+            
+            with col1:
+                if st.button("📥 حفظ النتائج", use_container_width=True):
+                    st.success("تم حفظ النتائج بنجاح!")
+            
+            with col2:
+                if st.button("🖨️ طباعة النتائج", use_container_width=True):
+                    st.info("يمكنك استخدام زر الطباعة في المتصفح لطباعة النتائج")
+            
+            with col3:
+                if st.button("🔄 إعادة تعبئة النموذج", use_container_width=True):
+                    st.experimental_rerun()
         
-        with col3:
-            if st.button("🔄 إعادة تعبئة النموذج", use_container_width=True):
-                st.experimental_rerun()
-    else:
-        st.warning("لم نتمكن من العثور على تخصصات مناسبة بناءً على البيانات المدخلة. يرجى تعديل معايير البحث والمحاولة مرة أخرى.")
+        else:
+            st.markdown(f"<h2 style='text-align: center; color: #2E86AB;'>🎯 نتائج التوصية</h2>", unsafe_allow_html=True)
+            st.write("تم العثور على التوصيات التالية:")
+            st.write(results)
+            
+    except Exception as e:
+        st.markdown(f"""
+        <div class='error-message'>
+            <h3>❌ حدث خطأ أثناء معالجة طلبك</h3>
+            <p><strong>تفاصيل الخطأ:</strong> {str(e)}</p>
+            <p>يرجى المحاولة مرة أخرى أو التواصل مع الدعم الفني.</p>
+        </div>
+        """, unsafe_allow_html=True)
 
 # قسم المعلومات الإضافية
 st.markdown("---")
