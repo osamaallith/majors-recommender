@@ -106,7 +106,7 @@ def recommend(profile, top_n=7, alpha=0.6, beta=0.35, gamma=0.1):
             "automation_risk_score": row.get("automation_risk_score"),
             "score": round(final_score,3),
             "description": row.get("description"),
-            "skills_required": "" if pd.isna(row.get("skills")) else row.get("skills")
+            "skills_required": row.get("skills")
         })
     results.sort(key=lambda x: x["score"], reverse=True)
     return results[:top_n]
